@@ -1,10 +1,10 @@
 const express = require('express')
-const bodyParser = require('body-parser')
-const ctrl = require('./usersCtrl')
+const ctrl = require('./userCtrl')
 const app = express()
 const PORT = 3000
+const {json} = require('express');
 
-app.use(bodyParser.json())
+app.use(json())
 
 app.get('/api/user/', ctrl.get)
 app.get('/api/user/:userId', ctrl.getbyId)

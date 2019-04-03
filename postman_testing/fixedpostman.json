@@ -1,0 +1,1196 @@
+{
+	"info": {
+		"_postman_id": "ffb5c136-d83e-4283-bec2-0fb40e295a90",
+		"name": "node_assessment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Users - #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4e6b2285-1182-47ca-a79e-3de99713ef52",
+						"exec": [
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.globals.set('users', responseBody);",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"const emailData = res.filter(e => e.email == 'mrodriguez1k@cornell.edu');",
+							"const ageData = res.filter(e => e.age < 40);",
+							"const favoritesData = res.filter(e => e.favorites.includes('react'));",
+							"",
+							"pm.globals.set(\"emailData\", JSON.stringify(emailData));",
+							"pm.globals.set(\"ageData\", JSON.stringify(ageData));",
+							"pm.globals.set(\"favoritesData\", JSON.stringify(favoritesData));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users ( favorites ) - #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "01f0add9-c509-41de-90b6-50a0476b2287",
+						"exec": [
+							"const usersFavorites = JSON.parse(pm.globals.get('favoritesData'))",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test('Every User Returned has React as a favorite', () => {",
+							"    const all = res.every(item => item.favorites.includes('react'))",
+							"    pm.expect(all).to.equal(true)",
+							"})",
+							"pm.test('Has the correct Length', () => {",
+							"    pm.expect(usersFavorites.length).to.equal(res.length)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/user?favorites=react",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					],
+					"query": [
+						{
+							"key": "favorites",
+							"value": "react"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users ( age ) - #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "635b6bdb-e6c2-4cc9-a56d-f23b4323f0df",
+						"exec": [
+							"const usersAge = JSON.parse(pm.globals.get('ageData'))",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test('Every users is under 40', () => {",
+							"    const all = res.every(item => item.age < 40)",
+							"    pm.expect(all).to.equal(true)",
+							"})",
+							"pm.test('Has the correct Length', () => {",
+							"    pm.expect(usersAge.length).to.equal(res.length)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/user?age=40",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					],
+					"query": [
+						{
+							"key": "age",
+							"value": "40"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users ( email ) - #1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "121e5fcd-f9bb-49f8-90f5-2a8d438bc716",
+						"exec": [
+							"const usersEmail = JSON.parse(pm.globals.get('emailData'))",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Returned User has the correct email', () => {",
+							"    const all = res.every(item => item.email === 'mrodriguez1k@cornell.edu')",
+							"    pm.expect(all).to.equal(true)",
+							"})",
+							"",
+							"pm.test('Has the correct Length', () => {",
+							"    pm.expect(usersEmail.length).to.equal(res.length)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/user?email=mrodriguez1k@cornell.edu",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "mrodriguez1k@cornell.edu"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By Id - #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ed3866ac-2093-473f-924a-ce3b7892d477",
+						"exec": [
+							"const res = JSON.parse(responseBody)",
+							"const users = JSON.parse(pm.globals.get('users'));",
+							"const randomId = pm.globals.get('randomId')",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('returned user is the correct one', () => {",
+							"    const userWithSameId = users.find(user => user.id === randomId)",
+							"    pm.expect(res).to.deep.equal(userWithSameId)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "18002df8-6080-4dc2-9669-86f5100ad210",
+						"exec": [
+							"const allUsers = JSON.parse(pm.globals.get('users'));",
+							"",
+							"const possibleIDs = allUsers.map(user => user.id);",
+							"",
+							"const randomIndex = Math.floor(Math.random() * possibleIDs.length)",
+							"",
+							"const randomId = possibleIDs[randomIndex]",
+							"",
+							"pm.globals.set('randomId', randomId)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/{{randomId}}",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"{{randomId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By Id - #2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1cfebe2f-cb26-469d-b955-30a207d27cf9",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/1410",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"1410"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Admins - #3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3f7a1d8e-6828-430f-9aaf-6bc54f78f7db",
+						"exec": [
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('All Returned users have type of Admin', () => {",
+							"    const all = res.every(item => item.type === 'admin')",
+							"    pm.expect(all).to.equal(true)",
+							"})",
+							"",
+							"pm.test('Has the correct number of items', () => {",
+							"    const correctLength = users.filter(user => user.type === 'admin').length",
+							"    pm.expect(res).to.have.lengthOf(correctLength)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/admin",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Non-Admins - #4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "735b8ebb-4563-4141-81d9-6b22f1fb858e",
+						"exec": [
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('All Returned are not admins', () => {",
+							"    const all = res.every(item => item.type !== 'admin')",
+							"    pm.expect(all).to.equal(true)",
+							"})",
+							"",
+							"pm.test('Has the correct number of items', () => {",
+							"    const correctLength = users.filter(user => user.type !== 'admin').length",
+							"    pm.expect(res).to.have.lengthOf(correctLength)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/nonadmin",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"nonadmin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users By Type (user) - #5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "13d0e776-6354-4f1f-95e4-e911e54d07d3",
+						"exec": [
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('All Returned are not admins', () => {",
+							"    const all = res.every(item => item.type === 'user')",
+							"    pm.expect(all).to.equal(true)",
+							"})",
+							"",
+							"pm.test('Has the correct number of items', () => {",
+							"    const correctLength = users.filter(user => user.type === 'user').length",
+							"    pm.expect(res).to.have.lengthOf(correctLength)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/type/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"type",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users By Type (moderator) - #5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "46fa50dc-07a4-4627-af88-d491c0368624",
+						"exec": [
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('All Returned are not admins', () => {",
+							"    const all = res.every(item => item.type === 'moderator')",
+							"    pm.expect(all).to.equal(true)",
+							"})",
+							"",
+							"pm.test('Has the correct number of items', () => {",
+							"    const correctLength = users.filter(user => user.type === 'moderator').length",
+							"    pm.expect(res).to.have.lengthOf(correctLength)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/type/moderator",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"type",
+						"moderator"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users By Type (admin) - #5",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f5213bfe-d632-4211-96a5-2831f4cf81a4",
+						"exec": [
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('All Returned are not admins', () => {",
+							"    const all = res.every(item => item.type === 'admin')",
+							"    pm.expect(all).to.equal(true)",
+							"})",
+							"",
+							"pm.test('Has the correct number of items', () => {",
+							"    const correctLength = users.filter(user => user.type === 'admin').length",
+							"    pm.expect(res).to.have.lengthOf(correctLength)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/type/admin",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"type",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove User by Id - #8",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "07c48e71-5d0d-4ea5-9177-c58ddc0f40ac",
+						"exec": [
+							"const res = JSON.parse(responseBody);",
+							"",
+							"const deletedId = pm.globals.get('randomId')",
+							"console.log(deletedId)",
+							"const users = JSON.parse(pm.globals.get('users'));",
+							"",
+							"pm.globals.set('users', responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('User deleted is not in the response', () => {",
+							"  let index = res.findIndex(item => item.id === deletedId)",
+							"  pm.expect(index).to.eql(-1)",
+							"})",
+							"",
+							"pm.test('Length of returned array is one smaller', () => {",
+							"    pm.expect(res.length).to.eql(users.length - 1)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "551097c2-766b-4127-9962-dda79100d56e",
+						"exec": [
+							"const allUsers = JSON.parse(pm.globals.get('users'));",
+							"",
+							"const possibleIDs = allUsers.map(user => user.id);",
+							"",
+							"const randomIndex = Math.floor(Math.random() * possibleIDs.length - 10)",
+							"",
+							"const randomId = possibleIDs[randomIndex]",
+							"",
+							"pm.globals.set('randomId', randomId)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user/{{randomId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"{{randomId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirms the Correct User was Deleted - #8",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3a121df9-a3dc-4eec-b6d7-bac892dae518",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3ae65bbd-e28b-4e98-a763-5a7b0a8058ba",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user/{{randomId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"{{randomId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirms User Was deleted By id, not Index - #8",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "07c48e71-5d0d-4ea5-9177-c58ddc0f40ac",
+						"exec": [
+							"const res = JSON.parse(responseBody);",
+							"",
+							"const deletedId = pm.globals.get('randomId')",
+							"console.log(deletedId)",
+							"const users = JSON.parse(pm.globals.get('users'));",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('User deleted is not in the response', () => {",
+							"  let index = res.findIndex(item => item.id === deletedId)",
+							"  pm.expect(index).to.eql(-1)",
+							"})",
+							"",
+							"pm.test('Length of returned array is one smaller', () => {",
+							"    pm.expect(res.length).to.eql(users.length - 1)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "551097c2-766b-4127-9962-dda79100d56e",
+						"exec": [
+							"const allUsers = JSON.parse(pm.globals.get('users'));",
+							"",
+							"const possibleIDs = allUsers.map(user => user.id);",
+							"",
+							"const randomIndex = Math.floor(Math.random() * possibleIDs.length - 10)",
+							"",
+							"const randomId = possibleIDs[randomIndex]",
+							"",
+							"pm.globals.set('randomId', randomId)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user/{{randomId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"{{randomId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Still gets correct user after delete - #8",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ed3866ac-2093-473f-924a-ce3b7892d477",
+						"exec": [
+							"const res = JSON.parse(responseBody)",
+							"const users = JSON.parse(pm.globals.get('users'));",
+							"const randomId = pm.globals.get('randomId')",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('returned user is the correct one', () => {",
+							"    const userWithSameId = users.find(user => user.id === randomId)",
+							"    pm.expect(res).to.deep.equal(userWithSameId)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "18002df8-6080-4dc2-9669-86f5100ad210",
+						"exec": [
+							"const allUsers = JSON.parse(pm.globals.get('users'));",
+							"",
+							"const possibleIDs = allUsers.map(user => user.id);",
+							"",
+							"const randomIndex = Math.floor(Math.random() * possibleIDs.length)",
+							"",
+							"const randomId = possibleIDs[randomIndex]",
+							"",
+							"pm.globals.set('randomId', randomId)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/{{randomId}}",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"{{randomId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User By Id - #6",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7ef7ebf6-f429-4825-9d70-85a8fb193c4b",
+						"exec": [
+							"const res = JSON.parse(responseBody);",
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"",
+							"const putData = JSON.parse(pm.globals.get('putData'))",
+							"const randomId = pm.globals.get('randomId')",
+							"",
+							"const originalUser = users.findIndex(item => item.id === randomId)",
+							"const updatedUser = res.find(item => item.id === randomId)",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"The id Was not modifed\", () => {",
+							"    pm.expect(updatedUser.id).to.equal(randomId)",
+							"})",
+							"",
+							"pm.test('the returned user has the correct info', () => {",
+							"    delete updatedUser.id;",
+							"    let matching = true;",
+							"    for(let key in updatedUser) {",
+							"        if (updatedUser[key] !== putData[key]) {",
+							"            if (key === 'favorites') {",
+							"                if(updatedUser.favorites.length !== putData.favorites.length) {",
+							"                    matching = false",
+							"                    continue;",
+							"                } else {",
+							"                    updatedUser.favorites.forEach(item => {",
+							"                        if(!putData.favorites.includes(item)) {",
+							"                            matching = false;",
+							"                        }",
+							"                    })",
+							"                }",
+							"            } else {",
+							"                matching = false;",
+							"            }",
+							"        }",
+							"    }",
+							"    pm.expect(matching).to.equal(true)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3ac688f3-b1bf-4365-a983-5871f7d7b299",
+						"exec": [
+							"const allUsers = JSON.parse(pm.globals.get('users'));",
+							"",
+							"const possibleIDs = allUsers.map(user => user.id);",
+							"",
+							"const randomIndex = Math.floor(Math.random() * possibleIDs.length)",
+							"",
+							"const randomId = possibleIDs[randomIndex]",
+							"",
+							"pm.globals.set('randomId', randomId)",
+							"",
+							"const requestInfo = request.data",
+							"",
+							"pm.globals.set('putData', requestInfo)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"first_name\": \"Oliver\",\n\t\"last_name\": \"Queen\",\n\t\"email\": \"queen@worldmail.com\",\n\t\"gender\": \"Male\",\n\t\"language\": \"english\",\n\t\"age\": 32,\n\t\"city\": \"San Jose\",\n\t\"state\": \"California\",\n\t\"type\": \"moderator\",\n\t\"favorites\": [\n\t  \"react\",\n\t  \"angular\"\n\t]\n}\n"
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/{{randomId}}",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"{{randomId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User - #7",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1404cbcb-ad7f-4297-83ad-f3e7aefec5b2",
+						"exec": [
+							"pm.globals.set('users', responseBody)",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"const addedUser = JSON.parse(request.data)",
+							"",
+							"const expectedNewId = 101;",
+							"",
+							"",
+							"// const addedUser",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"const user = res.find(user => user.id === expectedNewId);",
+							"",
+							"pm.test('id is not a repeate', () => {",
+							"    remainingUser = users.filter(item => item.id === expectedNewId);",
+							"    pm.expect(remainingUser).to.have.length(1)",
+							"})",
+							"",
+							"pm.test('user has the correct ID', () => {",
+							"    pm.expect(user.id).to.equal(expectedNewId)",
+							"})",
+							"",
+							"pm.test('the returned user has the correct info', () => {",
+							"    delete user.id;",
+							"    let matching = true;",
+							"    for(let key of res) {",
+							"        if (res[key] !== addedUser[key]) {",
+							"            matching = false;",
+							"        }",
+							"    }",
+							"    pm.expect(matching).to.equal(true)",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "dcb28f48-aa0d-4081-9d00-5c2480f6f20e",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Bruce\",\n    \"last_name\": \"Wayne\",\n    \"email\": \"b_wayne@wayne_manor.com\",\n    \"gender\": \"Male\",\n    \"language\": \"english\",\n    \"age\": 34,\n    \"city\": \"Gotham\",\n    \"state\": \"unknown\",\n    \"type\": \"Admin\",\n    \"favorites\": [\n      \"angular\",\n      \"react\"\n    ]\n  }"
+				},
+				"url": {
+					"raw": "localhost:3000/api/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User 2 - #7",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d77ceb19-9fc0-41c1-aee7-aa3b6b6e72c9",
+						"exec": [
+							"pm.globals.set('users', responseBody)",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"const addedUser = JSON.parse(request.data)",
+							"",
+							"const expectedNewId = 102;",
+							"",
+							"",
+							"// const addedUser",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"const user = res.find(user => user.id === expectedNewId);",
+							"",
+							"pm.test('id is not a repeate', () => {",
+							"    remainingUser = users.filter(item => item.id === expectedNewId);",
+							"    pm.expect(remainingUser).to.have.length(1)",
+							"})",
+							"",
+							"pm.test('user has the correct ID', () => {",
+							"    pm.expect(user.id).to.equal(expectedNewId)",
+							"})",
+							"",
+							"pm.test('the returned user has the correct info', () => {",
+							"    delete user.id;",
+							"    let matching = true;",
+							"    for(let key of res) {",
+							"        if (res[key] !== addedUser[key]) {",
+							"            matching = false;",
+							"        }",
+							"    }",
+							"    pm.expect(matching).to.equal(true)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Clark\",\n    \"last_name\": \"Kent\",\n    \"email\": \"kal-el@krypton.com\",\n    \"gender\": \"Male\",\n    \"language\": \"english\",\n    \"age\": 29,\n    \"city\": \"Metropolis\",\n    \"state\": \"New York\",\n    \"type\": \"Admin\",\n    \"favorites\": [\n      \"angular\",\n      \"react\"\n    ]\n  }"
+				},
+				"url": {
+					"raw": "localhost:3000/api/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User 3 - #7",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "586e0b7b-0808-45fd-af3c-d1b144758093",
+						"exec": [
+							"pm.globals.set('users', responseBody)",
+							"const res = JSON.parse(responseBody);",
+							"",
+							"const users = JSON.parse(pm.globals.get('users'))",
+							"const addedUser = JSON.parse(request.data)",
+							"",
+							"const expectedNewId = 103;",
+							"",
+							"",
+							"// const addedUser",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"",
+							"const user = res.find(user => user.id === expectedNewId);",
+							"",
+							"pm.test('id is not a repeate', () => {",
+							"    remainingUser = users.filter(item => item.id === expectedNewId);",
+							"    pm.expect(remainingUser).to.have.length(1)",
+							"})",
+							"",
+							"pm.test('user has the correct ID', () => {",
+							"    pm.expect(user.id).to.equal(expectedNewId)",
+							"})",
+							"",
+							"pm.test('the returned user has the correct info', () => {",
+							"    delete user.id;",
+							"    let matching = true;",
+							"    for(let key of res) {",
+							"        if (res[key] !== addedUser[key]) {",
+							"            matching = false;",
+							"        }",
+							"    }",
+							"    pm.expect(matching).to.equal(true)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Peter\",\n    \"last_name\": \"Parker\",\n    \"email\": \"spidey@webs.com\",\n    \"gender\": \"Male\",\n    \"language\": \"english\",\n    \"age\": 34,\n    \"city\": \"New York City\",\n    \"state\": \"New York\",\n    \"type\": \"Admin\",\n    \"favorites\": [\n      \"angular\",\n      \"react\"\n    ]\n  }"
+				},
+				"url": {
+					"raw": "localhost:3000/api/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "de7e0047-9e5d-473f-b23b-e3256026e83c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "40fcdb5e-200c-4001-8d79-bf262b1ecc4e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

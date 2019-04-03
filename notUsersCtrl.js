@@ -1,39 +1,42 @@
 const userData = require('./userData.json')
+// use lots of filters
 
 module.exports = {
   get: (req, res) => {
+    const {age, email, favorites} = req.query
     let users = []
-    if(req.query) {
-      if(req.query.age) {
+    
+      if(age) {
         for(let i = 0; i < userData.length; i++) {
-          if(userData[i].age < parseInt(req.query.age)) {
+          if(userData[i].age < parseInt(age)) {
             users.push(userData[i])
           }
         }
-      } else if (req.query.email) {
+      } else if (email) {
         for(let i = 0; i < userData.length; i++) {
-          if(userData[i].email === req.query.email) {
+          if(userData[i].email === email) {
             users.push(userData[i])
           }
         }
-      } else if (req.query.favorites) {
+      } else if (favorites) {
         for(let i = 0; i < userData.length; i++) {
-          if(userData[i].favorites.includes(req.query.favorites)) {
+          if(userData[i].favorites.includes(favorites)) {
             users.push(userData[i])
-          }
         }
       }
     } else {
-      users = userData
+      users = userData.slice()
     }
-    console.log(users.length)
     res.status(200).send(users)
   },
 
-  getbyId: (req, res) => {
-    let users = userData
-    if (req.params.userId <= 100) {
-    res.status(200).send(users[parseInt(req.params.userId)])
+  getbyId: (req, res) => { // use a filter
+    let users = userData.slice()
+    let {userId} = req.params
+    let newArr = users.filter(val => val.id === parseInt(userId))
+    console.log('byid', newArr)
+    if (newArr[0]) {
+    res.status(200).send(newArr[0])
     } else {
       res.sendStatus(404)
     }
@@ -46,7 +49,6 @@ module.exports = {
         users.push(userData[i])
       }
     }
-    console.log(users.length)
     res.status(200).send(users)
   },
 
@@ -57,7 +59,6 @@ module.exports = {
         users.push(userData[i])
       }
     }
-    console.log(users.length)
     res.status(200).send(users)
   },
 
@@ -68,42 +69,43 @@ module.exports = {
         users.push(userData[i])
       }
     }
-    console.log(users.length)
     res.status(200).send(users)
   },
 
   editbyId: (req, res) => {
-    let users = userData
+    let users = userData.slice()
     for(let i = 0; i < users.length; i++) {
       if(users[i].id === parseInt(req.params.userId)) {
         users[i] = {...users[i], ...req.body}
       }
     }
-    console.log(users.length)
     res.status(200).send(users)
   },
 
   postuser: (req, res) => {
-    let users = userData
+    let users = userData.slice()
     let id = users.length + 1
     let newPerson = {id, ...req.body}
     users.push(newPerson)
-    console.log(users.length)
     res.status(200).send(users)
   },
 
   delete: (req, res) => {
-    let users = []
-    if (req.params.userId <= 100) {
-    for(let i = 0; i < userData.length; i++) {
-      if(userData[i].id !== parseInt(req.params.userId)) {
-        console.log(userData[i])
-        users.push(userData[i])
-      }
+    const {userId} = req.params
+    const newId = parseInt(userId)
+    console.log('userId', userId)
+    console.log('logic? the rapper', userData.find((val => val.id === parseInt(userId))))
+    if (userData.find((val => val.id === parseInt(userId)))) {
+      const index = userData.findIndex(val => val.id === parseInt(userId))
+      // console.log('index', index)
+      userData.splice(index, 1)
+      // const newArr = userData.filter(val => val.id === newId)
+      // console.log('find', userData.find(val => val.id === parseInt(userId)))
+      // console.log(newArr)
+      res.status(200).send(userData)
+    } else {
+      res.sendStatus(404)
     }
-    console.log(users.length)
-    res.status(200).send(users)
-  } else {
-    res.sendStatus(404)
-  }}
+
+  }
 }
